@@ -130,10 +130,16 @@ def clear_comma(street):
     return street
 
 
-def get_ez_street(street, zip_code, consignee_company, city, doorplate):
+def get_ez_street(street, zip_code, consignee_company, city, doorplate):  # except street
+    print(street, zip_code, consignee_company, city, doorplate)
     street = clear_comma(street)
-    print(street)
-    ez_street = setting.ez_street
+    ez_street = {
+        'TRASSE': 'tr.',
+        'traße': 'tr',
+        'VENUE': 've',
+        'ÂTIMENT': 'ât',
+        'PPARTEMENT': 'pt'
+    }
     for word in list(ez_street.keys()):
         capital_words = re.findall(word, street, flags=re.IGNORECASE)
         if capital_words:
@@ -142,17 +148,15 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):
     consignee_company_word = ''
     city_word = ''
     doorplate_word = ''
-    # consignee_company += ' '
-    print(street, zip_code, consignee_company, city, 123)
     if not pd.isnull(zip_code):
         zip_code_word = re.findall(zip_code, street, flags=re.IGNORECASE)
         consignee_company_word = re.findall(consignee_company, street, flags=re.IGNORECASE)  # 公司
-        city_word = re.findall(city, street, flags=re.IGNORECASE)  # city
+        if city != 'Hoheging':
+            city_word = re.findall(city, street, flags=re.IGNORECASE)  # city
         doorplate_word = re.findall(doorplate, street, flags=re.IGNORECASE)  # doorplate
     if zip_code_word:
         street = street.replace(zip_code_word[0], '')
     if consignee_company_word:
-        # if consignee_company_word[0] != ' ':
         street = street.replace(consignee_company_word[0], '')
     if city_word:
         street = street.replace(city_word[0] + ' ', '')
@@ -163,20 +167,47 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):
                 doorplate_re = doorplate_word[0].replace('-', '\-')
             word_split = street.split(',')
 
-            re_sql = ',(.*)' + doorplate_re if word_split >= 3 else '(.*)' + doorplate_re
+            re_sql = ',(.*)' + doorplate_re + ','
             val = re.findall(re_sql, street)
-            # if not val:
-            # re_s = '[^' + doorplate_re + '](,.*)'
-            #  = re.findall(re_sql_2, street)
+            print(val)
+            if not val:
+                val = ['']
+            if len(val[0]) < 3:
+                val = ['']
+            if not val[0]:
+                re_sql = '(.*)' + doorplate_re
+                val = re.findall(re_sql, street)
+            if not val:
+                val = ['']
+            if len(val[0]) < 3:
+                val = ['']
+            if not val[0]:
+                re_sql = doorplate_re + ',(.*?,)'
+                val = re.findall(re_sql, street)
+            if not val:
+                val = ['']
+            if len(val[0]) < 3:
+                val = ['']
+            if not val[0]:
+                re_sql = doorplate_re + ',(.*?,)'
+                val = re.findall(re_sql, street)
+            if not val:
+                val = ['']
+            if len(val[0]) < 3:
+                val = ['']
+            if not val[0]:
+                re_sql = doorplate_re + '(.*)'
+                val = re.findall(re_sql, street)
+            if not val:
+                val = ['']
+            if len(val[0]) < 3:
+                val = ['']
             mark_mes = val
             mark_mes = mark_mes[0] if mark_mes else ''
-        except:
-            mark_mes = ''
-        consignee_company += mark_mes
-        # street = street.replace(doorplate_word[0], '')
-        # print(doorplate_word[0])
+        except ZeroDivisionError:
+            mark_mes = street
+        consignee_company += street.replace(mark_mes, '')
         street = mark_mes
-        print(mark_mes)
     consignee_company = consignee_company.replace(doorplate, '')
     street = clear_comma(street)
     consignee_company = clear_comma(consignee_company)
@@ -185,6 +216,7 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):
 
     if pd.isnull(consignee_company):
         consignee_company = ''
+    print(street, len(street))
     if len(street) > 35:
         return '||||||||||||||||||||||||||||||', consignee_company
     return street, consignee_company
