@@ -274,6 +274,6 @@ def read_excel(address, delivery_country, postcode=''):
 
 
 if __name__ == '__main__':
-    result = read_excel("General Manso 51 3 3,", '', 123123)
+    result = read_excel("S6,17,", '', 123123)
     print(result)
     # save_excel(result, '/Users/loctek/Desktop/德国订单地址数据111.xlsx')

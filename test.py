@@ -108,7 +108,7 @@ def clear_comma(street):
 
 
 street, consignee_company = get_ez_street(
-    street='12 A Rue de la Carpe,Rue de la Carpe 12A,', doorplate='12 A', consignee_company='poiu',
+    street='Eibiswald 399,', doorplate='399', consignee_company='',
     zip_code='123123',
     city='Hoheging')
 print(street)

@@ -280,7 +280,9 @@ ez_street = {
     'traße': 'tr',
     'VENUE': 've',
     'ÂTIMENT': 'ât',
-    'PPARTEMENT': 'pt'
+    'PPARTEMENT': 'pt',
+    'Calle': 'C/',
+    'CALLE': 'C/',
 }
 name_list = ['自动分配仓库', '仓库代码/Warehouse Code', '参考编号/Reference Code',
              '派送方式/Delivery Style', '销售平台/Sales Platform', '跟踪号/Tracking number',

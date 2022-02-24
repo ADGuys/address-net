@@ -208,7 +208,7 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):  # exce
             mark_mes = street
         consignee_company += street.replace(mark_mes, '')
         street = mark_mes
-    consignee_company = consignee_company.replace(doorplate, '')
+    consignee_company = consignee_company.replace(doorplate, '', 1)
     street = clear_comma(street)
     consignee_company = clear_comma(consignee_company)
     if consignee_company == ',':
