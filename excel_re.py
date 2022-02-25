@@ -249,6 +249,13 @@ def read_excel(address, delivery_country, postcode=''):
             val = ''
 
     if not val:
+        val = re.findall(r'(^[A-Z]{1}[\s]{0,1}\d{1,})[\,]{1}', address, re.IGNORECASE)
+        if val:
+            val = val[0]
+        else:
+            val = ''
+
+    if not val:
         val = re.findall(r'(\d{1,}[-/\da-z]{0,}\s{0,}\w{0,1})[,\s.]{1,}', address, re.IGNORECASE)
         if val:
             val = val[0]
@@ -274,6 +281,6 @@ def read_excel(address, delivery_country, postcode=''):
 
 
 if __name__ == '__main__':
-    result = read_excel("S6,17,", '', 123123)
+    result = read_excel("Splendid Learning Gmbh,Raiffeisenstr 2 Gewerbepark A11,", '', 123123)
     print(result)
     # save_excel(result, '/Users/loctek/Desktop/德国订单地址数据111.xlsx')

@@ -131,7 +131,7 @@ def clear_comma(street):
 
 
 def get_ez_street(street, zip_code, consignee_company, city, doorplate):  # except street
-    print(street, zip_code, consignee_company, city, doorplate)
+    # print(street, zip_code, consignee_company, city, doorplate)
     street = clear_comma(street)
     ez_street = {
         'TRASSE': 'tr.',
@@ -151,7 +151,7 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):  # exce
     if not pd.isnull(zip_code):
         zip_code_word = re.findall(zip_code, street, flags=re.IGNORECASE)
         consignee_company_word = re.findall(consignee_company, street, flags=re.IGNORECASE)  # 公司
-        if city != 'Hoheging':
+        if city not in ['Hoheging', 'Berlin', 'Eibiswald']:
             city_word = re.findall(city, street, flags=re.IGNORECASE)  # city
         doorplate_word = re.findall(doorplate, street, flags=re.IGNORECASE)  # doorplate
     if zip_code_word:
@@ -169,7 +169,7 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):  # exce
 
             re_sql = ',(.*)' + doorplate_re + ','
             val = re.findall(re_sql, street)
-            print(val)
+            # print(val)
             if not val:
                 val = ['']
             if len(val[0]) < 3:
@@ -206,17 +206,29 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):  # exce
             mark_mes = mark_mes[0] if mark_mes else ''
         except ZeroDivisionError:
             mark_mes = street
-        consignee_company += street.replace(mark_mes, '')
+        consignee_company += street.replace(mark_mes, ' ')
         street = mark_mes
-    consignee_company = consignee_company.replace(doorplate, '', 1)
+    print('111111')
+    print(doorplate, ' ', consignee_company)
+
+    consignee_company_klon = consignee_company.replace(',', ' ')  # creat a klon replace ','
+    consignee_company_list = consignee_company_klon.split(' ')  # split company
+    mark_doorplate = str(doorplate).strip()  # clear doorplate
+    mark_doorplate_list = mark_doorplate.split(' ')
+    if str(mark_doorplate) in consignee_company_list:
+        consignee_company = consignee_company.replace(str(mark_doorplate), '')
+    if len(len(mark_doorplate_list) > 1):
+        consignee_company = consignee_company.replace(str(mark_doorplate), '')
     street = clear_comma(street)
+    # street = street.replace(doorplate, '')
     consignee_company = clear_comma(consignee_company)
+
     if consignee_company == ',':
         consignee_company = ''
 
     if pd.isnull(consignee_company):
         consignee_company = ''
-    print(street, len(street))
+    # print(street, len(street))
     if len(street) > 35:
         return '||||||||||||||||||||||||||||||', consignee_company
     return street, consignee_company
