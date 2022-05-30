@@ -38,10 +38,10 @@ def read_excel(address, delivery_country, postcode=''):
         re_sql = r'strasse[\s,\.]{0,}(\d{1,}[-/\da-z]{0,}\s{0,}\w{0,1})[,\s]{1,}|strasse[\s,\.]{0,}([a-z]{1,}[-/\da-z]{0,}\d{1,})'
         val = check_func(re_sql, address)
 
-    if not val:
-        re_sql = r'straße[\s,\.]{0,}(\d{1,}[-/\da-z]{0,}\s{0,}\w{0,1})[,\s]{1,}' \
-                 r'|straße[\s,\.]{0,}([a-z]{1,}[-/\da-z]{0,}\d{1,})'
-        val = check_func(re_sql, address)
+    # if not val:
+    #     re_sql = r'straße[\s,\.]{0,}(\d{1,}[-/\da-z]{0,}\s{0,}\w{0,1})[,\s]{1,}' \
+    #              r'|straße[\s,\.]{0,}([a-z]{1,}[-/\da-z]{0,}\d{1,})'
+    #     val = check_func(re_sql, address)
 
     if not val:
         re_sql = r'str[\s,\.]{0,}(\d{1,}[-/\da-z\s]{0,}\s{0,}\w{0,1})[,\s]{1,}' \

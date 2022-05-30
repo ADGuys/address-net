@@ -275,6 +275,14 @@ champion_name = ['Tankstelle', 'KG', 'Inc.', 'Co.', 'Co', 'Ltd.', 'SDN', 'BHD', 
 new_columns = ['参考编号/Reference Code', '收件人姓名/Consignee Name', '收件人国家/Consignee Country', '城市/City',
                '街道/Street', '邮编/Zip Code', '收件人电话/Consignee Phone', 'SKU1', '数量1/Quantity 1',
                '门牌号/Doorplate', '收件人Email/Consignee Email', '收件人公司/Consignee Company']
+ssh_columns = ['参考编号/Reference Code', '收件人姓名/Consignee Name', '收件人国家/Consignee Country', '城市/City',
+               '街道/Street', '邮编/Zip Code', '收件人电话/Consignee Phone', 'SKU1', '数量1/Quantity 1',
+               '门牌号/Doorplate', '收件人Email/Consignee Email', '收件人公司/Consignee Company', 'ebname', 'province']
+ssh_old_columns = ['Order Number', 'Delivery Receive Name', 'Delivery Country', 'Delivery Town',
+                   'Delivery Address Line 1',
+                   'Delivery Postcode', 'Telephone Number', 'Product Code', 'Quantity', 'flat_number', 'Email Address',
+                   'Delivery Company', 'ebname', 'province']
+
 ez_street = {
     'TRASSE': 'tr.',
     'traße': 'tr',
@@ -317,3 +325,41 @@ name_list = ['自动分配仓库', '仓库代码/Warehouse Code', '参考编号/
              'VAT税号/Vat Tax Code', '配货信息/Distribution Information',
              '收件人税号类型/Consignee Tax Type', '配送指定日期/Assign Send Date',
              '配送指定时间/Assign Send Time']
+
+ssh_name_list = ['自动分配仓库', '仓库代码/Warehouse Code', '参考编号/Reference Code',
+                 '派送方式/Delivery Style', '销售平台/Sales Platform', '跟踪号/Tracking number',
+                 '订单成本价/total_amount_excl_vat', '订单交易额/total_amount_incl_vat',
+                 'COD订单/COD Orders', 'COD Value', '币种/Currency', '年龄/Age',
+                 '收件人姓名/Consignee Name', '收件人公司/Consignee Company',
+                 '收件人国家/Consignee Country', '州/Province', '区/District', '城市/City',
+                 '街道/Street', '街道2/Street2', '街道3/Street3', '门牌号/Doorplate',
+                 '邮编/Zip Code', '收件人Email/Consignee Email', '收件人电话/Consignee Phone',
+                 '收件人电话2/Consignee Phone2', '收件人证件号/Consignee License', '备注/Remark',
+                 'SKU1', '数量1/Quantity 1', '英文申报名称/Product Name En 1',
+                 '申报价值/Declared Value 1', 'SKU2', '数量2/Quantity 2',
+                 '英文申报名称/Product Name En 2', '申报价值/Declared Value 2', 'SKU3',
+                 '数量3/Quantity 3', '英文申报名称/Product Name En 3', '申报价值/Declared Value 3',
+                 'SKU4', '数量4/Quantity 4', '英文申报名称/Product Name En 4',
+                 '申报价值/Declared Value 4', 'SKU5', '数量5/Quantity 5',
+                 '英文申报名称/Product Name En 5', '申报价值/Declared Value 5', 'SKU6',
+                 '数量6/Quantity 6', '英文申报名称/Product Name En 6', '申报价值/Declared Value 6',
+                 'SKU7', '数量7/Quantity 7', '英文申报名称/Product Name En 7',
+                 '申报价值/Declared Value 7', 'SKU8', '数量8/Quantity 8',
+                 '英文申报名称/Product Name En 8', '申报价值/Declared Value 8', 'SKU9',
+                 '数量9/Quantity 9', '英文申报名称/Product Name En 9', '申报价值/Declared Value 9',
+                 'SKU10', '数量10/Quantity 10', '英文申报名称/Product Name En 10',
+                 '申报价值/Declared Value 10', '保险服务/Insurance', '投保金额/Insurance Amount',
+                 '签名服务/Signature', '平台店铺/Platform Shop', '买家ID/Buyers Id',
+                 '是否强制放货/Mandatory Release Cargo', '订单类型/Order Kind',
+                 '订购人/Order Payer Name', '订购人证件号/Order Id Number',
+                 '订购人电话/Order Payer Phone', '原产国/Order Country Code Origin',
+                 '订单销售金额/Order Sales Amount', '订单销售金额币种/Order Sales Currency',
+                 '是否ebay平台/Is Platform Ebay', 'ebay平台交易id/Ebay Item Id',
+                 'ebay平台交易号/Ebay Transaction Id', '税金付款方式/Tax Payment Method',
+                 'VAT税号/Vat Tax Code', '配货信息/Distribution Information',
+                 '收件人税号类型/Consignee Tax Type', '配送指定日期/Assign Send Date',
+                 '配送指定时间/Assign Send Time', 'ebname', 'province']
+
+columns_to_dict = ['org_name', 'org_ebname', 'org_street', 'org_city', 'org_receivezip', 'org_province',
+                   'org_countryname', 'org_phone', 'org_email', 'org_company', 'new_address1', 'new_address4',
+                   'new_company']
