@@ -153,7 +153,7 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):
             city_word = re.findall(city, street, flags=re.IGNORECASE)  # city
             doorplate_word = re.findall(doorplate, street, flags=re.IGNORECASE)  # doorplate
         except:
-            pass
+            print('122211')
     if zip_code_word:
         street = street.replace(zip_code_word[0], '')
     if consignee_company_word:
@@ -198,7 +198,7 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):
 
 def get_task():
     db_helper = DBPipeline()  # get DB config
-    db_helper.cursor.execute("""select * from view_address_check_bigdate limit 10""")  # run sql
+    db_helper.cursor.execute("""select * from view_address_check_bigdate""")  # run sql
     db_data = db_helper.cursor.fetchall()  # get result
     if not db_data:
         return ''
@@ -206,7 +206,7 @@ def get_task():
     data_list = [dict(zip(fields, item)) for item in db_data]
     df_data = pd.DataFrame(data_list)
     db_df_data = df_data[
-        ['name', 'receiveman', 'countryname', 'city', 'street', 'statezone', 'phone',
+        ['name', 'receiveman', 'countryname', 'city', 'street', 'receivezip', 'phone',
          'statezone', 'statezone', 'statezone', 'email', 'company', 'ebname', 'province']]
     db_df_data.columns = setting.ssh_old_columns  # get normal col
     print(db_df_data, 123222)
@@ -269,6 +269,7 @@ def get_task():
         data_new2['收件人公司/Consignee Company'], data_new2['街道/Street'] = zip(*data_new2.apply(
             lambda x: get_company(x['街道/Street'], x['收件人公司/Consignee Company'], x['派送方式/Delivery Style']),
             axis=1))
+
         # data_new2['街道/Street'] = data_new2.apply(lambda x: get_street(x['门牌号/Doorplate'], x['街道/Street']),
         #                                          axis=1)
         data_new2['街道/Street'], data_new2['收件人公司/Consignee Company'] = zip(*data_new2.apply(
@@ -279,7 +280,8 @@ def get_task():
     except Exception as error:
         print(error)
     # --- new ---
-    data_new2.to_excel('asdasd.xls', index=False)
+
+    # data_new2.to_excel('asdasd.xls', index=False)
     data_clear = data_new2[[
         '参考编号/Reference Code', 'ebname', '街道2/Street2', '城市/City', '邮编/Zip Code', 'province',
         '收件人国家/Consignee Country', '收件人电话/Consignee Phone', '收件人Email/Consignee Email',
@@ -287,11 +289,12 @@ def get_task():
     ]]
     data_clear.columns = setting.columns_to_dict
     data_clear = data_clear.to_dict(orient='records')
+    # data_new2.to_excel('asdasd.xls', index=False)
+
     for item in data_clear:
         print(item)
         DBPipeline().process_item(item)
     return 'ok'
-    # data_new2.to_excel('asdasd.xls', index=False)
 
 
 if __name__ == "__main__":

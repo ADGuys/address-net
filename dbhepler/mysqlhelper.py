@@ -56,7 +56,7 @@ class DBPipeline:
             )
             self.connect.commit()
             self.cursor.execute(
-                """update orderinfo_bigdata_test
+                """update orderinfo
                    SET fedexaddressvalidate = 'Y'
                    WHERE name = %s
                 """, (item['org_name']))
