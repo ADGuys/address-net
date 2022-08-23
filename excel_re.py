@@ -25,6 +25,9 @@ def read_excel(address, delivery_country, postcode=''):
     if not pd.isnull(delivery_country):
         delivery_country = str.upper(delivery_country)
 
+    if not address:
+        address = ' '
+
     if address[-1] != ',':
         address += ','
 

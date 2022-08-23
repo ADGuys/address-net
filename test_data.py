@@ -202,6 +202,10 @@ def full_email(email, name):
         return res_email
     return email
 
+def get_col_len(text_index):
+    return '=LEN(M' + str(text_index + 2) + ')', '=LEN(N' + str(text_index + 2) + ')', '=LEN(S' + str(
+        text_index + 2) + ')'
+
 
 if __name__ == "__main__":
     total_path = glob.glob(os.path.join('*.xls*'))
@@ -253,8 +257,8 @@ if __name__ == "__main__":
             data_new.columns = setting.new_columns
             data_new2 = data_new.reindex(columns=name_list)
             # data_new2[['街道2/Street2']] = data_new2[['街道/Street']] # 需要做字符判断和拆分
-            # data_new2[['仓库代码/Warehouse Code']] = 'EUKL'
-            # data_new2[['自动分配仓库']] = 'EUKL'
+            data_new2[['仓库代码/Warehouse Code']] = 'UKNH'
+            data_new2[['自动分配仓库']] = 'UKNH'
 
             data_new2[['街道3/Street3']] = data_new2[['街道/Street']]
 
@@ -290,6 +294,8 @@ if __name__ == "__main__":
             data_new2['街道/Street'], data_new2['街道2/Street2'] = zip(
                 *data_new2.apply(lambda x: get_street(x['街道/Street']),
                                  axis=1))
+            data_new2['收件人len'], data_new2['收件人公司len'], data_new2['收件人地址len'] = zip(*data_new2.apply(
+                lambda x: get_col_len(x.name), axis=1))
             data_new2.to_excel(out, index=False)
             if none_product:
                 with open('没有围长的sku产品.txt', 'w') as f:
@@ -301,3 +307,5 @@ if __name__ == "__main__":
     else:
         print('没有excel文件')
         time.sleep(10)
+
+
