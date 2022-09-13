@@ -1,4 +1,3 @@
-# EUKL
 import re
 import time
 
@@ -133,6 +132,7 @@ def clear_comma(street):
 
 def get_ez_street(street, zip_code, consignee_company, city, doorplate):
     street = clear_comma(street)
+    print(street)
     ez_street = setting.ez_street
     for word in list(ez_street.keys()):
         capital_words = re.findall(word, street, flags=re.IGNORECASE)
@@ -143,6 +143,7 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):
     city_word = ''
     doorplate_word = ''
     # consignee_company += ' '
+    print(street, zip_code, consignee_company, city, 123)
     if not pd.isnull(zip_code):
         try:
             zip_code_word = re.findall(zip_code, street, flags=re.IGNORECASE)
@@ -179,6 +180,7 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):
         street = street.replace(mark_mes, '')
         # print(doorplate_word[0])
         # street = mark_mes
+        print(mark_mes)
     consignee_company = consignee_company.replace(doorplate, '')
     street = clear_comma(street)
     consignee_company = clear_comma(consignee_company)
@@ -190,7 +192,6 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):
     if len(street) > 35:
         return '||||||||||||||||||||||||||||||', consignee_company
     return street, consignee_company
-
 
 def get_col_len(text_index):
     return '=LEN(M' + str(text_index + 2) + ')', '=LEN(N' + str(text_index + 2) + ')', '=LEN(S' + str(
@@ -249,8 +250,7 @@ if __name__ == "__main__":
             data_new2[['街道2/Street2']] = data_new2[['街道/Street']]
             data_new2[['仓库代码/Warehouse Code']] = 'EUKL'
             data_new2[['自动分配仓库']] = 'EUKL'
-            data_new2['销售平台/Sales Platform'] = data_new2.apply(lambda x: function(x['参考编号/Reference Code']
-                                                                                  ), axis=1)
+            data_new2['销售平台/Sales Platform'] = data_new2.apply(lambda x: function(x['参考编号/Reference Code']), axis=1)
             data_new2['收件人国家/Consignee Country'] = data_new2.apply(lambda x: get_country(x['收件人国家/Consignee Country']),
                                                                    axis=1)
             data_new2['派送方式/Delivery Style'] = data_new2.apply(
@@ -269,11 +269,11 @@ if __name__ == "__main__":
                                             x['收件人公司/Consignee Company'],
                                             x['城市/City'], x['门牌号/Doorplate']
                                             ), axis=1))
-
             except Exception as error:
                 print(error)
             data_new2['收件人len'], data_new2['收件人公司len'], data_new2['收件人地址len'] = zip(*data_new2.apply(
                 lambda x: get_col_len(x.name), axis=1))
+
             data_new2.to_excel(out, index=False)
             if none_product:
                 with open('没有围长的sku产品.txt', 'w') as f:

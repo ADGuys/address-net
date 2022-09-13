@@ -12,10 +12,10 @@ import glob
 import setting as setting
 
 total_path = glob.glob(os.path.join('*.xls*'))
-product_io = '/Users/loctek/Desktop/address-net/addressnet/country&sku4DEdelivery.xls'
-product_io_uk = '/Users/loctek/Desktop/address-net/addressnet/country4GBdelivery.xls'
-# product_io = 'C:\\addressnet\\country&sku4DEdelivery.xls'
-# product_io_uk = 'C:\\addressnet\\country4GBdelivery.xls'
+# product_io = '/Users/loctek/Desktop/address-net/addressnet/country&sku4DEdelivery.xls'
+# product_io_uk = '/Users/loctek/Desktop/address-net/addressnet/country4GBdelivery.xls'
+product_io = 'C:\\addressnet\\country&sku4DEdelivery.xls'
+product_io_uk = 'C:\\addressnet\\country4GBdelivery.xls'
 
 product_data = pd.read_excel(product_io_uk, dtype=str, sheet_name='country4UK')
 
@@ -65,8 +65,10 @@ def get_delivery(country, zip):  # 物流方式
         df_data_res = df_data[pd.isnull(df_data['zip_code']) == False]
         df_data_res_list = df_data_res.to_dict('records')
         for item_dict in df_data_res_list:
-            if item_dict['zip_code'] in zip:
-                return item_dict['delivery_style']
+            # if item_dict['zip_code'] in zip:
+            if item_dict['zip_code']:
+                if zip.startswith(item_dict['zip_code']):
+                    return item_dict['delivery_style']
         return product_data[(pd.isnull(product_data['zip_code']) == True) & (product_data.country_code == country)][
             'delivery_style'].values[0]
 
@@ -202,9 +204,10 @@ def full_email(email, name):
         return res_email
     return email
 
+
 def get_col_len(text_index):
     return '=LEN(M' + str(text_index + 2) + ')', '=LEN(N' + str(text_index + 2) + ')', '=LEN(S' + str(
-        text_index + 2) + ')'
+        text_index + 2) + ')', '=LEN(T' + str(text_index + 2) + ')'
 
 
 if __name__ == "__main__":
@@ -294,8 +297,8 @@ if __name__ == "__main__":
             data_new2['街道/Street'], data_new2['街道2/Street2'] = zip(
                 *data_new2.apply(lambda x: get_street(x['街道/Street']),
                                  axis=1))
-            data_new2['收件人len'], data_new2['收件人公司len'], data_new2['收件人地址len'] = zip(*data_new2.apply(
-                lambda x: get_col_len(x.name), axis=1))
+            data_new2['收件人len'], data_new2['收件人公司len'], data_new2['收件人地址len'], data_new2['收件人地址2len'] = zip(
+                *data_new2.apply(lambda x: get_col_len(x.name), axis=1))
             data_new2.to_excel(out, index=False)
             if none_product:
                 with open('没有围长的sku产品.txt', 'w') as f:
@@ -307,5 +310,3 @@ if __name__ == "__main__":
     else:
         print('没有excel文件')
         time.sleep(10)
-
-

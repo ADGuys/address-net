@@ -12,8 +12,8 @@ import glob
 import setting as setting
 
 total_path = glob.glob(os.path.join('*.xls*'))
-product_io = '/Users/loctek/Desktop/address-net/addressnet/country&sku4DEdelivery.xls'
-# product_io = 'C:\addressnet\country&sku4DEdelivery.xls'
+# product_io = '/Users/loctek/Desktop/address-net/addressnet/country&sku4DEdelivery.xls'
+product_io = 'C:\addressnet\country&sku4DEdelivery.xls'
 
 product_dat_sku = pd.read_excel(product_io, dtype=str, sheet_name='sku4delivery')
 
@@ -40,7 +40,7 @@ def fun_isdigit(aString):
 
 def function(text):
     if 'OT' in text:
-        return 'OTTO'
+        return 'OVERSTOCK'
     elif 'AM' in text:
         return 'AMAZON'
     else:
@@ -186,6 +186,9 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):
         return '||||||||||||||||||||||||||||||', consignee_company
     return street, consignee_company
 
+def get_col_len(text_index):
+    return '=LEN(M' + str(text_index + 2) + ')', '=LEN(N' + str(text_index + 2) + ')', '=LEN(S' + str(
+        text_index + 2) + ')'
 
 if __name__ == "__main__":
     total_path = glob.glob(os.path.join('*.xls*'))
@@ -263,7 +266,8 @@ if __name__ == "__main__":
                                             ), axis=1))
             except Exception as error:
                 print(error)
-
+            data_new2['收件人len'], data_new2['收件人公司len'], data_new2['收件人地址len'] = zip(*data_new2.apply(
+                lambda x: get_col_len(x.name), axis=1))
             data_new2.to_excel(out, index=False)
             if none_product:
                 with open('没有围长的sku产品.txt', 'w') as f:
