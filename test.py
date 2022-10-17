@@ -12,17 +12,25 @@ import glob
 import setting as setting
 
 total_path = glob.glob(os.path.join('*.xls*'))
-# product_io = '/Users/loctek/Desktop/address-net/addressnet/country&sku4DEdelivery.xls'
+# product_io = '/Users/loctek/Desktop/address-net/addressnet/country&sku4DEdelivery2.xls'
 product_io = 'C:\addressnet\country&sku4DEdelivery.xls'
-
-product_dat_sku = pd.read_excel(product_io, dtype=str, sheet_name='sku4delivery')
 
 product_data_country = pd.read_excel(product_io, dtype=str, sheet_name='2country_cody')
 
+number2code = pd.read_excel(product_io, dtype=str, sheet_name='number2code')
+sku4delivery = pd.read_excel(product_io, dtype=str, sheet_name='sku4delivery')
+product_dat_sku = pd.read_excel(product_io, dtype=str, sheet_name='sku4delivery')
+
 pd_list_country = product_data_country.to_dict('records')
-pd_list_sku = product_dat_sku.to_dict('records')
+number2code = number2code.to_dict('records')
+# sku4delivery = sku4delivery.to_dict('records')
+
+
+# data_country = {item['UpDeliveryCountry']: item['country_code'] for item in pd_list_country}
 
 data_country = {item['UpDeliveryCountry']: item['country_code'] for item in pd_list_country}
+# data_code = {'sku4delivery': sku4delivery, 'FSD': FSD, 'FSF': FSF, 'FSS': FSS, 'ThirdDE': ThirdDE}
+# print(data_code, 123)
 
 none_product = []
 
@@ -58,9 +66,20 @@ def get_country(text):
 
 
 # PR1206-Ebony
-def get_delivery(sku, country):  # 物流方式
+def get_delivery(sku, country, reference_code):  # 物流方式
+    logistics = 'sku4delivery'
+    # print(number2code)
+    for item in number2code:
+        if item['code'] in reference_code:
+            logistics = item['logistics']
+    print(logistics, 123)
+    print(product_dat_sku[(product_dat_sku.SKU == sku) & (product_dat_sku.CODE == logistics)][country].values[0])
+    # print(logistics[logistics.SKU == sku][country].value[0])
+    #
+    # print(logistics, 1211)
     try:
-        return product_dat_sku[product_dat_sku.SKU == sku][country].values[0]
+        # return logistics[logistics.SKU == sku][country].value[0]
+        return product_dat_sku[(product_dat_sku.SKU == sku) & (product_dat_sku.CODE == logistics)][country].values[0]
     except:
         if sku not in none_product:
             none_product.append(sku)
@@ -136,7 +155,7 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):
     city_word = ''
     doorplate_word = ''
     # consignee_company += ' '
-    print(street, zip_code, consignee_company, city, 123)
+    # print(street, zip_code, consignee_company, city, 123)
     if not pd.isnull(zip_code):
         try:
             zip_code_word = re.findall(zip_code, street, flags=re.IGNORECASE)
@@ -186,9 +205,11 @@ def get_ez_street(street, zip_code, consignee_company, city, doorplate):
         return '||||||||||||||||||||||||||||||', consignee_company
     return street, consignee_company
 
+
 def get_col_len(text_index):
     return '=LEN(M' + str(text_index + 2) + ')', '=LEN(N' + str(text_index + 2) + ')', '=LEN(S' + str(
         text_index + 2) + ')'
+
 
 if __name__ == "__main__":
     total_path = glob.glob(os.path.join('*.xls*'))
@@ -249,7 +270,7 @@ if __name__ == "__main__":
             data_new2['州/Province'] = data_new2.apply(
                 lambda x: (x['城市/City'] if x['收件人国家/Consignee Country'] == 'GB' else x['州/Province']), axis=1)
             data_new2['派送方式/Delivery Style'] = data_new2.apply(
-                lambda x: get_delivery(x['SKU1'], x['收件人国家/Consignee Country']), axis=1)
+                lambda x: get_delivery(x['SKU1'], x['收件人国家/Consignee Country'], x['参考编号/Reference Code']), axis=1)
             data_new2['门牌号/Doorplate'] = data_new2.apply(lambda x: get_email(x['门牌号/Doorplate']),
                                                          axis=1)
             try:
@@ -279,4 +300,3 @@ if __name__ == "__main__":
     else:
         print('没有excel文件')
         time.sleep(10)
-

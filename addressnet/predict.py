@@ -132,7 +132,7 @@ def predict(address: List[str], model_dir: str = None) -> List[Dict[str, str]]:
     :return: a list of dictionaries with the address components separated
     """
     if model_dir is None:
-        # model_dir = os.path.join(os.path.dirname(__file__), 'pretrained')
+        model_dir = os.path.join(os.path.dirname(__file__), 'pretrained')
         model_dir = "C:\\addressnet\\pretrained"
         # model_dir = "C:\\Users\\guy\\Desktop\\address-net\\address-net\\addressnet\\pretrained"
 
