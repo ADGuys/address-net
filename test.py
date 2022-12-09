@@ -12,8 +12,10 @@ import glob
 import setting as setting
 
 total_path = glob.glob(os.path.join('*.xls*'))
-# product_io = '/Users/loctek/Desktop/address-net/addressnet/country&sku4DEdelivery2.xls'
-product_io = 'C:\addressnet\country&sku4DEdelivery.xls'
+# product_io = '/Users/loctek/Desktop/address-net/addressnet/country&sku4DEdelivery.xls'
+product_io = './addressnet/country&sku4DEdelivery.xls'
+# product_io = 'C:\addressnet\country&sku4DEdelivery.xls'
+print(product_io)
 
 product_data_country = pd.read_excel(product_io, dtype=str, sheet_name='2country_cody')
 
@@ -29,8 +31,6 @@ number2code = number2code.to_dict('records')
 # data_country = {item['UpDeliveryCountry']: item['country_code'] for item in pd_list_country}
 
 data_country = {item['UpDeliveryCountry']: item['country_code'] for item in pd_list_country}
-# data_code = {'sku4delivery': sku4delivery, 'FSD': FSD, 'FSF': FSF, 'FSS': FSS, 'ThirdDE': ThirdDE}
-# print(data_code, 123)
 
 none_product = []
 
@@ -72,8 +72,7 @@ def get_delivery(sku, country, reference_code):  # 物流方式
     for item in number2code:
         if item['code'] in reference_code:
             logistics = item['logistics']
-    print(logistics, 123)
-    print(product_dat_sku[(product_dat_sku.SKU == sku) & (product_dat_sku.CODE == logistics)][country].values[0])
+    # print(product_dat_sku[(product_dat_sku.SKU == sku) & (product_dat_sku.CODE == logistics)][country].values[0])
     # print(logistics[logistics.SKU == sku][country].value[0])
     #
     # print(logistics, 1211)
@@ -213,12 +212,15 @@ def get_col_len(text_index):
 
 if __name__ == "__main__":
     total_path = glob.glob(os.path.join('*.xls*'))
+    # total_path = ['/Users/loctek/Desktop/address-net/123.xls']
+    print(total_path, 123)
     date = time.time()
     if len(total_path) >= 1:
         for new_io in total_path:
             io = new_io
             out = re.findall(r'(.*)\.', io)[0] + '_output_' + str(int(date)) + '.xls'
-            data = pd.read_excel(io, dtype=str)
+            print(out, 321)
+            data = pd.read_excel('/Users/loctek/Desktop/address-net/123.xls', dtype=str)
             data['Delivery Address Line 1'] = data.apply(lambda x: remake_null(x['Delivery Address Line 1']),
                                                          axis=1)
             data_dict = dict(data)
@@ -263,19 +265,23 @@ if __name__ == "__main__":
             data_new2[['街道2/Street2']] = data_new2[['街道/Street']]
             data_new2[['仓库代码/Warehouse Code']] = 'EUKL'
             data_new2[['自动分配仓库']] = 'EUKL'
-            data_new2['销售平台/Sales Platform'] = data_new2.apply(lambda x: function(x['参考编号/Reference Code']), axis=1)
-
-            data_new2['收件人国家/Consignee Country'] = data_new2.apply(lambda x: get_country(x['收件人国家/Consignee Country']),
+            data_new2['销售平台/Sales Platform'] = data_new2.apply(lambda x: function(x['参考编号/Reference Code']),
                                                                    axis=1)
+
+            data_new2['收件人国家/Consignee Country'] = data_new2.apply(
+                lambda x: get_country(x['收件人国家/Consignee Country']),
+                axis=1)
             data_new2['州/Province'] = data_new2.apply(
                 lambda x: (x['城市/City'] if x['收件人国家/Consignee Country'] == 'GB' else x['州/Province']), axis=1)
             data_new2['派送方式/Delivery Style'] = data_new2.apply(
-                lambda x: get_delivery(x['SKU1'], x['收件人国家/Consignee Country'], x['参考编号/Reference Code']), axis=1)
+                lambda x: get_delivery(x['SKU1'], x['收件人国家/Consignee Country'], x['参考编号/Reference Code']),
+                axis=1)
             data_new2['门牌号/Doorplate'] = data_new2.apply(lambda x: get_email(x['门牌号/Doorplate']),
-                                                         axis=1)
+                                                            axis=1)
             try:
                 data_new2['收件人公司/Consignee Company'], data_new2['街道/Street'] = zip(*data_new2.apply(
-                    lambda x: get_company(x['街道/Street'], x['收件人公司/Consignee Company'], x['派送方式/Delivery Style']),
+                    lambda x: get_company(x['街道/Street'], x['收件人公司/Consignee Company'],
+                                          x['派送方式/Delivery Style']),
                     axis=1))
 
                 # data_new2['街道/Street'] = data_new2.apply(lambda x: get_street(x['门牌号/Doorplate'], x['街道/Street']),
